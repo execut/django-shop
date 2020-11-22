@@ -26,9 +26,19 @@ Module.directive('shopProductFilter', ['$location', function($location) {
 				var params = {};
 				angular.forEach(filter_attrs, function(attr) {
 					if (scope.filters[attr]) {
-						params[attr] = scope.filters[attr];
+						if (typeof scope.filters[attr] === 'object') {
+							params[attr] = [];
+							angular.forEach(scope.filters[attr], function (val, key) {
+								if (val === true) {
+									params[attr].push(key);
+								}
+							});
+						} else {
+							params[attr] = scope.filters[attr];
+						}
 					}
 				});
+
 				scope.searchQuery = '';  // remove content in search field
 				scope.$emit('shop.catalog.filter', params);
 			};
